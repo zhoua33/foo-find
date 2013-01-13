@@ -1,73 +1,126 @@
 <!DOCTYPE html> 
 <html> 
 <head> 
-	<title>Wi-Find</title> 
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link type="text/css" rel="stylesheet" href="css/launch.css" media="screen" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<meta charset="utf-8">
+	<title>Picture This</title>
+
+	<!-- Sets initial viewport load and disables zooming  -->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+	<style>
+		#load-background{
+		    display:    none;
+		    z-index:    500;
+		    height: 100%;
+		    width: 100%;
+		    background: rgba(220,220,220,.8);
+		}
+ 		#loading{
+		    display:    none;
+		    z-index:    501;
+		}
+		.content-frame {
+			padding: 0 25px;
+		}
+		#img-result {
+			width: 100%;
+		}
+		ul.list.inset {
+			margin: 0 0 25px 0;
+		}
+		#instruction_box {
+			padding: 20px 20px 20px 20px;
+			width: inherit;
+			text-align: left;
+		}
+		#description-block {
+			margin-bottom: 25px;
+		}
+		.bold {
+			font-weight: bold;
+		}
+	</style>
+
+	<link rel="stylesheet" href="css/ratchet.css" />
 	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-    <script type="text/javascript"
-      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
-    </script>
+	<script src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
+	<script src="js/rachet.js"></script>
+	<script src="js/align.js"></script> <!-- for aligning elements on page-->
 
-    <script type="text/javascript" src="js/jquery.ui.map.js"></script>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script> 
-    <!--The jsapi allows for I.P. address based look-up -->    	
-	<script src="http://www.google.com/jsapi" language="javascript"></script>
-	
-	<script language="javascript">
-		$(function() { 
-				
-				var curLat;
-				var curLong;
-
-				//Get user location from I.P.address, to avoid asking the user to share his location for the first page.
-				if (google.loader.ClientLocation != null) {
-				  curLat = google.loader.ClientLocation.latitude;
-				  curLong = google.loader.ClientLocation.longitude;
-				} else {
-				  curLat = 42.0411;
-				  curLong = -87.6901;
-				}
-
-				$('#map_canvas').gmap({'center': new google.maps.LatLng(curLat, curLong), 'zoom': 10, 'disableDefaultUI':true, 'callback': function() {
-					var self = this;
-					self.addMarker({'position': this.get('map').getCenter()});
-				}});
-		});
-	</script>
 </head>
 
-<body >
-	<div id="home" data-role="page" data-theme="b">
-		<div data-role="header" data-theme="a" style="height:35px;">
-			<h1>Wi-Find</h1>
-		</div><!-- /header -->
-		
-		<div data-role="content">	
-			<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
-				<div id="map_canvas" class="map rounded" style="height:150px;"></div>
+<body onload="loadParseData()"> 
+	<!-Title Bar->
+	<header class="bar-title">
+		<h1 class="title">Foo-Find</h1>
+  	</header>
+  	
+  	<!-Footer Bar->
+  	<nav class="bar-tab">
+	  <ul class="tab-inner">
+	    <li class="tab-item">
+	      <a href="camera.html">
+	        <img class="tab-icon" src="img/camera.png">
+	        <div class="tab-label">Camera</div>
+	      </a>
+	    </li>
+	    <li class="tab-item active">
+	      <a href="">
+	        <img class="tab-icon" src="img/search.png">
+	        <div class="tab-label">Search</div>
+	      </a>
+	    </li>
+	    <li class="tab-item">
+	      <a href="upload.html">
+	        <img class="tab-icon" src="img/upload.png">
+	        <div class="tab-label">Upload</div>
+	      </a>
+	    </li>
+	  </ul>
+	</nav>
+
+	<div id="home" class="content">
+
+		<br><br>
+		<div class="content-frame">
+			<ul class="inset list"> 
+                <li id="instruction_box">
+                    <span class="bold">Getting Started:</span> 
+            	</li>
+            </ul>
+			<form class="padded">
+				<input type="search" id="search" placeholder="What's on the menu?"/><br>
+				<a class="button button-block" id="submit" >Search</a>
+		 	</form>
+		 	<br>
+			<image id="img-result"/>
+			<br><br>
+			<div id="description-block" style="display:none;">
+				<ul class="list inset" id="detail">
+					<li id="description"><b>Description: </b>N/A</li>
+					<li id="ingredient"><b>Main Ingredients(s): </b>N/A</li>
+					<li id="category"><b>Category: </b>N/A</li>
+					<li id="country"><b>Country of Origin: </b>N/A</li>
+				</ul>
 			</div>
-		</div><!-- adding the map showing current position of user -->
+		</div>
+	</div>
 
-		<div data-role="content">	
-			<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="a">
-				<li data-role="list-divider">What would you like to do?</li>
-				<li data-theme="c"><a href="map.html" data-ajax="false">I'm looking for WiFi</a></li>
-				<li data-theme="c"><a href="havewifi.html" data-ajax="false">I want to share my WiFi</a></li>
-			</ul>
-		</div><!-- /content -->
-
-		<div data-role="content">	
-			<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="a">
-				<li data-theme = "e"><a href="removewifi.html" data-ajax="false">Remove my Wi-Fi</a></li>
-			</ul>
-		</div><!-- /content -->
-
-		<div class="footer" data-role="footer" data-theme="a" >
-			<label text-align="center">&copy; 2012 Wi-Find Alpha.</label>
-		</div><!-- /footer -->
-	</div><!-- /page -->
+    <div id="loading" >
+        <ul class="list inset" id="detail">
+            <li id="description" >
+                <img src="img/loading.gif" style="margin-left:50%;" />
+                <br><br>
+                <p id="status"> <b>Searching...</b></p>
+            </li>
+        </ul> 
+    </div>
+    <div id="load-background">
+    </div>
 </body>
+
 </html>
