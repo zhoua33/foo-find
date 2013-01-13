@@ -1,0 +1,126 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<meta charset="utf-8">
+	<title>Picture This</title>
+
+	<!-- Sets initial viewport load and disables zooming  -->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+	<style>
+		#load-background{
+		    display:    none;
+		    z-index:    500;
+		    height: 100%;
+		    width: 100%;
+		    background: rgba(220,220,220,.8);
+		}
+ 		#loading{
+		    display:    none;
+		    z-index:    501;
+		}
+		.content-frame {
+			padding: 0 25px;
+		}
+		#img-result {
+			width: 100%;
+		}
+		ul.list.inset {
+			margin: 0 0 25px 0;
+		}
+		#instruction_box {
+			padding: 20px 20px 20px 20px;
+			width: inherit;
+			text-align: left;
+		}
+		#description-block {
+			margin-bottom: 25px;
+		}
+		.bold {
+			font-weight: bold;
+		}
+	</style>
+
+	<link rel="stylesheet" href="css/ratchet.css" />
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
+	<script src="js/rachet.js"></script>
+	<script src="js/align.js"></script> <!-- for aligning elements on page-->
+
+</head>
+
+<body onload="loadParseData()"> 
+	<!-Title Bar->
+	<header class="bar-title">
+		<h1 class="title">Foo-Find</h1>
+  	</header>
+  	
+  	<!-Footer Bar->
+  	<nav class="bar-tab">
+	  <ul class="tab-inner">
+	    <li class="tab-item">
+	      <a href="camera.html">
+	        <img class="tab-icon" src="img/camera.png">
+	        <div class="tab-label">Camera</div>
+	      </a>
+	    </li>
+	    <li class="tab-item active">
+	      <a href="">
+	        <img class="tab-icon" src="img/search.png">
+	        <div class="tab-label">Search</div>
+	      </a>
+	    </li>
+	    <li class="tab-item">
+	      <a href="upload.html">
+	        <img class="tab-icon" src="img/upload.png">
+	        <div class="tab-label">Upload</div>
+	      </a>
+	    </li>
+	  </ul>
+	</nav>
+
+	<div id="home" class="content">
+
+		<br><br>
+		<div class="content-frame">
+			<ul class="inset list"> 
+                <li id="instruction_box">
+                    <span class="bold">Getting Started:</span> 
+            	</li>
+            </ul>
+			<form class="padded">
+				<input type="search" id="search" placeholder="What's on the menu?"/><br>
+				<a class="button button-block" id="submit" >Search</a>
+		 	</form>
+		 	<br>
+			<image id="img-result"/>
+			<br><br>
+			<div id="description-block" style="display:none;">
+				<ul class="list inset" id="detail">
+					<li id="description"><b>Description: </b>N/A</li>
+					<li id="ingredient"><b>Main Ingredients(s): </b>N/A</li>
+					<li id="category"><b>Category: </b>N/A</li>
+					<li id="country"><b>Country of Origin: </b>N/A</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+    <div id="loading" >
+        <ul class="list inset" id="detail">
+            <li id="description" >
+                <img src="img/loading.gif" style="margin-left:50%;" />
+                <br><br>
+                <p id="status"> <b>Searching...</b></p>
+            </li>
+        </ul> 
+    </div>
+    <div id="load-background">
+    </div>
+</body>
+
+</html>
